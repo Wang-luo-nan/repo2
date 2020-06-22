@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>录入</title>
+</head>
+<body>
+<form action="/addUser" method="post">
+    <div>姓名<input type="text" name="username" placeholder="请输入"></div>
+    <!--    <div>用户ID<input type="text" name="userid" placeholder="请输入"></div>-->
+    <div>状态<input id="checkbox" type="checkbox" value="1" name="status">启用
+    </div>
+    <div>邮箱<input type="text" name="email" placeholder="请输入"></div>
+    <div>电话<input type="text" name="phonenum" placeholder="请输入时"></div>
+    <div>部门<select id="sel" name="deptid"></select></div>
+    <div><input type="submit" value="提交"></div>
+</form>
+</body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        queryDept();
+    })
+
+    var queryDept=function () {
+
+        $.ajax({
+            type:"post",
+            url:"/queryAllDept",
+            dataType: 'json',
+            success:function (result) {
+                console.log(result);
+                var i = result.length;
+                for (let j = 0; j < i; j++) {
+                    var option = $("<option>"+result[j].dname+"</option>")
+                    option.val(result[j].deptid);
+                    $("#sel").append(option);
+                }
+
+            }
+        })
+
+    }
+</script>
+</html>

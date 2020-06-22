@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>员工列表</title>
+</head>
+<style>
+    #tb{
+        border: 1px black solid;
+    }
+</style>
+<body>
+
+<input type="text" id="username" name = "username">
+<button type="button" id="sel"  onclick="queryName()">查询</button>
+<button type="button" id="add" onclick="window.location='/add.html'">添加</button>
+<table id="tb">
+    <tr>
+        <td>用户名</td>
+        <td>姓名</td>
+        <td>邮箱</td>
+        <td>电话号码</td>
+        <td>账号状态</td>
+        <td>部门名称</td>
+    </tr>
+</table>
+</body>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        init();
+    })
+
+    function queryName() {
+        $("#tb tr:gt(0)").empty();
+        // var text= $("#tb").val();
+
+        $.ajax({
+            type: "post",
+            url:"/queryName",
+            dataType: 'json',
+            data:{
+                "username":$("#username").val()
+            },
+            success : function (data) {
+                var i = data.length;
+                for (var j = 0; j < i; j++) {
+                    console.log(data[j])
+                    var tr = $("<tr></tr>");
+                    var td1 = $("<td>" + data[j].userid + "</td>");
+                    var td2 = $("<td>" + data[j].username + "</td>");
+                    var td3 = $("<td>" + data[j].email + "</td>");
+                    var td4 = $("<td>" + data[j].phonenum + "</td>");
+                    var td5 = $("<td>" + data[j].status + "</td>");
+                    // var td6 = $("<td>" + data[j].dept.dname + "</td>");
+                    var td6 = $("<td>"+data[j].deptid+"</td>");
+                    var td7 = $("<td><button  onclick='update("+data[j].userid+")'>"+"修改"+"</button>"+"<button  onclick='del("+data[j].userid+")'>"+"删除"+"</button></td>");
+
+                    tr.append(td1);
+                    tr.append(td2);
+                    tr.append(td3);
+                    tr.append(td4);
+                    tr.append(td5);
+                    tr.append(td6);
+                    tr.append(td7);
+                    $("#tb").append(tr);
+
+                }
+            }
+        })
+    }
+    var del= function (j) {
+        $.ajax({
+            type:"post",
+            url:"/deleteById",
+            dataType:'json',
+            data: {
+                "userid":j
+            },
+            success:function (result) {
+                if (result==1){
+                    alert("删除成功")
+                    window.location="/";
+                }
+            }
+        })
+    }
+    var init=function(){
+        $.ajax({
+            type:"post",
+            url:"/queryAll",
+            dataType:'json',
+            success:function(data) {
+                var i = data.length;
+                for (var j = 0; j < i; j++) {
+                    console.log(data[j])
+                    var status = data[j].status;
+                    if (status=="1"){
+                        status="启用";
+                    }else {
+                        status="禁用";
+                    }
+                    var tr = $("<tr></tr>");
+                    var td1 = $("<td>"+data[j].userid+"</td>");
+                    var td2 = $("<td>"+data[j].username+"</td>");
+                    var td3 = $("<td>"+data[j].email+"</td>");
+                    var td4 = $("<td>"+data[j].phonenum+"</td>");
+                    var td5 = $("<td>"+status+"</td>");
+                    var td6 = $("<td>"+data[j].dept.dname+"</td>");
+                    // var td7 = $("<td>"+data[j].deptid+"</td>");
+                    var td7 = $("<td><button  onclick='update("+data[j].userid+")'>"+"修改"+"</button>"+"<button  onclick='del("+data[j].userid+")'>"+"删除"+"</button></td>");
+                    tr.append(td1);
+                    tr.append(td2);
+                    tr.append(td3);
+                    tr.append(td4);
+                    tr.append(td5);
+                    tr.append(td6);
+                    tr.append(td7);
+                    $("#tb").append(tr);
+                }
+            }
+        })
+    }
+</script>
+
+</html>

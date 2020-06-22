@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>主页</title>
+</head>
+<body>
+<a href="index.html">查询员工</a><br/>
+<a href="/add.html">录入员工</a><br/>
+<shiro:user>
+    <a href="/logout">注销</a>
+</shiro:user>
+
+</body>
+</html>
